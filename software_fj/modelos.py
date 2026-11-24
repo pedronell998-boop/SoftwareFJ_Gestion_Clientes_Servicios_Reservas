@@ -16,11 +16,13 @@ from .excepciones import (
     ServicioNoDisponibleError,
 )
 
+# Cuantización monetaria: todos los totales se expresan con dos decimales.
 CENTAVO = Decimal("0.01")
 
 
 def convertir_decimal(valor: object, campo: str) -> Decimal:
     """Convierte un valor a Decimal y conserva la causa si la conversión falla."""
+    # Decimal evita los pequeños errores binarios propios de los números float.
     try:
         resultado = Decimal(str(valor))
     except (InvalidOperation, TypeError, ValueError) as error:
@@ -54,12 +56,14 @@ def validar_entero_positivo(valor: object, campo: str) -> int:
         numero = int(valor)
     except (TypeError, ValueError) as error:
         raise DatosInvalidosError(f"'{campo}' debe ser un entero positivo.") from error
+    # La comparación textual evita aceptar decimales o cadenas ambiguas como "2.5".
     if str(numero) != str(valor).strip() or numero <= 0:
         raise DatosInvalidosError(f"'{campo}' debe ser un entero positivo.")
     return numero
 
 
 class Entidad(ABC):
+    # Las entidades comparten un identificador y un contrato de descripción.
     """Abstracción común para las entidades identificables del sistema."""
 
     def __init__(self, identificador: str) -> None:
@@ -79,6 +83,7 @@ class Entidad(ABC):
 
 
 class Cliente(Entidad):
+    # Los atributos con doble guion bajo aplican encapsulación por nombre.
     """Cliente con datos personales encapsulados y validados."""
 
     def __init__(self, identificador: str, nombre: str, correo: str, telefono: str) -> None:
@@ -126,6 +131,7 @@ class Cliente(Entidad):
 
 
 class Servicio(Entidad, ABC):
+    # Las clases concretas heredan esta información y redefinen las reglas propias.
     """Clase abstracta que define la interfaz común de los servicios."""
 
     def __init__(self, identificador: str, nombre: str, tarifa_base: object) -> None:
@@ -169,6 +175,7 @@ class Servicio(Entidad, ABC):
         unidades = validar_entero_positivo(cantidad, "cantidad")
         rebaja = validar_porcentaje(descuento, "descuento")
         tributo = validar_porcentaje(impuesto, "impuesto")
+        # Fórmula: tarifa × horas × unidades; luego se aplica descuento e impuesto.
         subtotal = self._tarifa_base * horas * unidades
         total = subtotal * (Decimal("1") - rebaja) * (Decimal("1") + tributo)
         return total.quantize(CENTAVO, rounding=ROUND_HALF_UP)
@@ -198,6 +205,7 @@ class Servicio(Entidad, ABC):
 
 
 class ReservaSala(Servicio):
+    # Una sala se reserva individualmente y no puede superar su capacidad.
     """Servicio de reserva de salas con límite de capacidad."""
 
     def __init__(
@@ -234,6 +242,7 @@ class ReservaSala(Servicio):
 
 
 class AlquilerEquipo(Servicio):
+    # El alquiler puede incluir varias unidades, siempre dentro del inventario.
     """Servicio de alquiler de equipos con inventario disponible."""
 
     def __init__(
@@ -270,6 +279,7 @@ class AlquilerEquipo(Servicio):
 
 
 class AsesoriaEspecializada(Servicio):
+    # Una asesoría se agenda por sesión y tiene un máximo de ocho horas.
     """Servicio de asesoría profesional por horas."""
 
     def __init__(
@@ -305,6 +315,7 @@ class AsesoriaEspecializada(Servicio):
 
 
 class EstadoReserva(Enum):
+    # Enum restringe los estados a los valores definidos para el ciclo de reserva.
     """Estados permitidos para el ciclo de vida de una reserva."""
 
     PENDIENTE = "Pendiente"
@@ -313,6 +324,7 @@ class EstadoReserva(Enum):
 
 
 class Reserva(Entidad):
+    # La reserva relaciona objetos del dominio y calcula su costo al construirse.
     """Reserva que relaciona un cliente con un servicio y un periodo."""
 
     def __init__(
@@ -337,6 +349,7 @@ class Reserva(Entidad):
         self._duracion = validar_duracion(duracion)
         self._cantidad = validar_entero_positivo(cantidad, "cantidad")
         self._personas = personas
+        # La validación polimórfica aplica la regla correspondiente al servicio recibido.
         servicio.validar_parametros(self._duracion, self._cantidad, self._personas)
         if not servicio.activo:
             raise ServicioNoDisponibleError("No se puede reservar un servicio inactivo.")
@@ -345,6 +358,7 @@ class Reserva(Entidad):
         self.fecha_inicio = fecha_inicio
         self.fecha_fin = fecha_inicio + timedelta(hours=float(self._duracion))
         self.estado = EstadoReserva.PENDIENTE
+        # El mismo método se resuelve según la clase concreta del servicio.
         self.total = servicio.calcular_costo(
             self._duracion, descuento, impuesto, self._cantidad, self._personas
         )
@@ -374,6 +388,7 @@ class Reserva(Entidad):
 
     def procesar(self) -> None:
         """Procesa la confirmación y encadena los errores de dominio."""
+        # Se conserva el error original como causa de la excepción de nivel superior.
         try:
             self.confirmar()
         except (EstadoReservaError, ServicioNoDisponibleError) as error:

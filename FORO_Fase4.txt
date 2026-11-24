@@ -8,9 +8,9 @@ Para cumplir las condiciones del anexo, la información se administrará mediant
 
 La propuesta contempla una demostración de más de diez operaciones, con casos correctos y casos que deben ser rechazados de forma controlada. El código se organizará por módulos y se verificará mediante pruebas automatizadas antes de consolidarlo en el repositorio del grupo.
 
-Repositorio de GitHub: [PEGAR AQUÍ EL ENLACE REAL DEL REPOSITORIO DEL GRUPO]
+Repositorio de GitHub: https://github.com/pedronell998-boop/SoftwareFJ_Gestion_Clientes_Servicios_Reservas
 
-Quedo atento a la confirmación de los cinco integrantes y a sus aportes para distribuir la revisión, documentación y validación del proyecto.
+El repositorio contiene la estructura del proyecto, los módulos de Python, la demostración, las pruebas automatizadas y la documentación. La distribución de responsabilidades y los aportes de los demás integrantes deben registrarse de acuerdo con las actividades que efectivamente realice cada participante.
 
 Cordialmente,
 

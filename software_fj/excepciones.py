@@ -1,4 +1,9 @@
-"""Excepciones de dominio utilizadas por el Sistema Software FJ."""
+"""Excepciones de dominio utilizadas por el Sistema Software FJ.
+
+Cada clase permite identificar el tipo de situación que impide completar
+una operación. La clase base facilita capturar los errores propios del
+sistema sin confundirlos con fallos ajenos a las reglas del negocio.
+"""
 
 
 class ErrorSoftwareFJ(Exception):

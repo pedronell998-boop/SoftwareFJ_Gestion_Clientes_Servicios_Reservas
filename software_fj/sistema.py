@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from datetime import datetime
 from pathlib import Path
+from decimal import Decimal
 from typing import Optional
 
 from .excepciones import (
@@ -23,11 +24,13 @@ class SistemaGestion:
     """Administra clientes, servicios y reservas mediante listas en memoria."""
 
     def __init__(self, directorio_logs: Optional[Path] = None) -> None:
+        # Las colecciones se conservan en memoria durante la sesión.
         self.clientes: list[Cliente] = []
         self.servicios: list[Servicio] = []
         self.reservas: list[Reserva] = []
         raiz = Path(__file__).resolve().parent.parent
         self.directorio_logs = Path(directorio_logs) if directorio_logs else raiz / "logs"
+        # Se crea el directorio de logs si todavía no existe.
         self.directorio_logs.mkdir(parents=True, exist_ok=True)
         self.ruta_log = self.directorio_logs / "software_fj.log"
         self.logger = logging.getLogger(f"software_fj.{id(self)}")
@@ -39,6 +42,7 @@ class SistemaGestion:
                 logging.Formatter("%(asctime)s | %(levelname)s | %(message)s")
             )
             self.logger.addHandler(manejador)
+        # El formato incluye fecha, nivel y mensaje para facilitar la trazabilidad.
         self.logger.info("Sistema Software FJ inicializado.")
 
     def registrar_cliente(self, cliente: Cliente) -> Cliente:
@@ -55,6 +59,7 @@ class SistemaGestion:
                     f"El correo {cliente.correo} ya está asociado a otro cliente."
                 )
         except ErrorSoftwareFJ as error:
+            # exception() incorpora la traza del error, no solo su descripción.
             self.logger.exception("Error al registrar cliente: %s", error)
             raise
         else:
@@ -112,6 +117,8 @@ class SistemaGestion:
 
     def _validar_cruce_horario(self, nueva: Reserva) -> None:
         """Impide reservar el mismo servicio en periodos que se superponen."""
+        # Se comparan intervalos: dos reservas se cruzan si cada una empieza
+        # antes de que termine la otra. Solo cuentan reservas confirmadas.
         reservas_superpuestas = [
             existente
             for existente in self.reservas
@@ -157,13 +164,16 @@ class SistemaGestion:
             self._validar_cruce_horario(nueva)
             nueva.procesar()
         except ErrorSoftwareFJ as error:
+            # Registra el fallo y vuelve a elevarlo para que la interfaz lo informe.
             self.logger.exception("No se pudo crear la reserva %s: %s", identificador, error)
             raise
         else:
+            # else se ejecuta únicamente si todas las validaciones terminaron bien.
             self.reservas.append(nueva)
             self.logger.info("Reserva confirmada: %s", identificador)
             return nueva
         finally:
+            # finally registra el cierre del intento, sea exitoso o fallido.
             self.logger.info("Finalizó el intento de creación de reserva %s.", identificador)
 
     def cancelar_reserva(self, identificador: str) -> Reserva:
@@ -192,13 +202,15 @@ class SistemaGestion:
         Python no realiza sobrecarga tradicional por firma; los argumentos
         opcionales permiten ofrecer variantes de uso de un mismo método.
         """
-        servicio = self.buscar_servicio(servicio_id)
         try:
+            # La búsqueda también queda dentro del try: un ID inexistente debe registrarse.
+            servicio = self.buscar_servicio(servicio_id)
             total = servicio.calcular_costo(duracion, descuento, impuesto, cantidad, personas)
         except ErrorSoftwareFJ as error:
             self.logger.exception("Error al calcular costo del servicio %s: %s", servicio_id, error)
             raise
         else:
+            # El registro de éxito solo se escribe si búsqueda y cálculo concluyen bien.
             self.logger.info("Costo calculado para servicio %s: %s", servicio_id, total)
             return total
 
@@ -212,6 +224,7 @@ class SistemaGestion:
 
     def cerrar(self) -> None:
         """Cierra los manejadores de log para liberar el archivo."""
+        # Se copia la lista para poder retirar los manejadores mientras se itera.
         for manejador in list(self.logger.handlers):
             manejador.flush()
             manejador.close()

@@ -1,18 +1,31 @@
 Resultado de pruebas automatizadas – unittest
-test_01_registro_cliente_valido (test_sistema.PruebasSistemaSoftwareFJ.test_01_registro_cliente_valido) ... ok
-test_02_cliente_correo_invalido (test_sistema.PruebasSistemaSoftwareFJ.test_02_cliente_correo_invalido) ... ok
-test_03_cliente_duplicado (test_sistema.PruebasSistemaSoftwareFJ.test_03_cliente_duplicado) ... ok
-test_04_creacion_tres_tipos_servicio (test_sistema.PruebasSistemaSoftwareFJ.test_04_creacion_tres_tipos_servicio) ... ok
-test_05_servicio_tarifa_invalida (test_sistema.PruebasSistemaSoftwareFJ.test_05_servicio_tarifa_invalida) ... ok
-test_06_reserva_exitosa (test_sistema.PruebasSistemaSoftwareFJ.test_06_reserva_exitosa) ... ok
-test_07_reserva_cliente_inexistente (test_sistema.PruebasSistemaSoftwareFJ.test_07_reserva_cliente_inexistente) ... ok
-test_08_reserva_servicio_inactivo (test_sistema.PruebasSistemaSoftwareFJ.test_08_reserva_servicio_inactivo) ... ok
-test_09_cruce_horario (test_sistema.PruebasSistemaSoftwareFJ.test_09_cruce_horario) ... ok
-test_10_calculo_con_descuento_e_impuesto (test_sistema.PruebasSistemaSoftwareFJ.test_10_calculo_con_descuento_e_impuesto) ... ok
-test_11_cancelacion_reserva (test_sistema.PruebasSistemaSoftwareFJ.test_11_cancelacion_reserva) ... ok
-test_12_encadenamiento_error_fecha (test_sistema.PruebasSistemaSoftwareFJ.test_12_encadenamiento_error_fecha) ... ok
+
+test_01_registro_cliente_valido (test_sistema.PruebasSistemaSoftwareFJ.test_01_registro_cliente_valido)
+Comprueba que un cliente con datos válidos quede registrado. ... ok
+test_02_cliente_correo_invalido (test_sistema.PruebasSistemaSoftwareFJ.test_02_cliente_correo_invalido)
+Verifica que el correo con formato incorrecto sea rechazado. ... ok
+test_03_cliente_duplicado (test_sistema.PruebasSistemaSoftwareFJ.test_03_cliente_duplicado)
+Comprueba que el sistema impida registrar dos clientes con el mismo ID. ... ok
+test_04_creacion_tres_tipos_servicio (test_sistema.PruebasSistemaSoftwareFJ.test_04_creacion_tres_tipos_servicio)
+Verifica la creación de las tres clases concretas de servicio. ... ok
+test_05_servicio_tarifa_invalida (test_sistema.PruebasSistemaSoftwareFJ.test_05_servicio_tarifa_invalida)
+Comprueba que una tarifa igual a cero no sea aceptada. ... ok
+test_06_reserva_exitosa (test_sistema.PruebasSistemaSoftwareFJ.test_06_reserva_exitosa)
+Verifica la confirmación de una reserva que cumple las reglas. ... ok
+test_07_reserva_cliente_inexistente (test_sistema.PruebasSistemaSoftwareFJ.test_07_reserva_cliente_inexistente)
+Comprueba el rechazo de una reserva con cliente no registrado. ... ok
+test_08_reserva_servicio_inactivo (test_sistema.PruebasSistemaSoftwareFJ.test_08_reserva_servicio_inactivo)
+Verifica que no se pueda reservar un servicio desactivado. ... ok
+test_09_cruce_horario (test_sistema.PruebasSistemaSoftwareFJ.test_09_cruce_horario)
+Comprueba que dos reservas de sala no ocupen el mismo intervalo. ... ok
+test_10_calculo_con_descuento_e_impuesto (test_sistema.PruebasSistemaSoftwareFJ.test_10_calculo_con_descuento_e_impuesto)
+Verifica el cálculo monetario con descuento e impuesto. ... ok
+test_11_cancelacion_reserva (test_sistema.PruebasSistemaSoftwareFJ.test_11_cancelacion_reserva)
+Comprueba el cambio de estado de confirmada a cancelada. ... ok
+test_12_encadenamiento_error_fecha (test_sistema.PruebasSistemaSoftwareFJ.test_12_encadenamiento_error_fecha)
+Verifica que la excepción de dominio conserve la causa original. ... ok
 
 ----------------------------------------------------------------------
-Ran 12 tests in 0.010s
+Ran 12 tests in 0.009s
 
 OK
