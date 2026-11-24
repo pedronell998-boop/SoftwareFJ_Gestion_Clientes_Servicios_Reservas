@@ -1,0 +1,19 @@
+Cordial saludo, tutor y compañeros.
+
+Como primer aporte a la Fase 4, revisé la guía del componente práctico y el Anexo 3. El problema asignado corresponde al desarrollo de un Sistema Integral de Gestión de Clientes, Servicios y Reservas para la empresa Software FJ, que ofrece reservas de salas, alquiler de equipos y asesorías especializadas.
+
+Propongo estructurar la solución con una clase abstracta Entidad, una clase Cliente con validación y encapsulación de sus datos, una clase abstracta Servicio y tres servicios derivados: ReservaSala, AlquilerEquipo y AsesoriaEspecializada. La clase Reserva relacionará al cliente con el servicio solicitado, la fecha, la duración, el estado y el valor de la operación.
+
+Para cumplir las condiciones del anexo, la información se administrará mediante objetos y listas en memoria, sin utilizar bases de datos. El archivo de logs se reservará para registrar los eventos relevantes y los errores. El manejo de excepciones incluirá clases personalizadas, bloques try/except, try/except/else, try/except/finally y encadenamiento de excepciones. También se validarán datos de clientes, tarifas, disponibilidad de servicios, cantidades, capacidad de las salas y cruces de horario.
+
+La propuesta contempla una demostración de más de diez operaciones, con casos correctos y casos que deben ser rechazados de forma controlada. El código se organizará por módulos y se verificará mediante pruebas automatizadas antes de consolidarlo en el repositorio del grupo.
+
+Repositorio de GitHub: [PEGAR AQUÍ EL ENLACE REAL DEL REPOSITORIO DEL GRUPO]
+
+Quedo atento a la confirmación de los cinco integrantes y a sus aportes para distribuir la revisión, documentación y validación del proyecto.
+
+Cordialmente,
+
+Pedro Nell Hincapie Hernandez
+Grupo 33
+Curso Programación – 213023
